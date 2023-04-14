@@ -1,12 +1,10 @@
-.cardContainer{
+.filterContainer{
+	width: 300px;
+	height: fit-content;
 	display: flex;
 	flex-direction: column;
 	padding: 10px;
 	border-radius: 10px;
-	max-width: 300px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-	.productImage{
-		width: 200px;
-		aspect-ratio: 1;
-	}
+
 }

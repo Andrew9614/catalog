@@ -3,4 +3,5 @@ export type BrandsType = {
   title: string;
   sort: string;
   code: string;
+	active?: boolean
 };

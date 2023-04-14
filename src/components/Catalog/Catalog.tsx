@@ -1,31 +1,53 @@
-import { getProducts, setActivePage } from '../../redux/catalogReducer';
+import {
+  applyFilter,
+  getCatalog,
+  setActivePage,
+} from '../../redux/catalogReducer';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { useEffect } from 'react';
 import { Card } from '../Card/Card';
+import styles from './Catalog.module.scss';
 import { Pagination } from '@mui/material';
+import { Filter } from '../Filter/Filter';
 
 export const Catalog = () => {
-  const state = useAppSelector((state) => state.catalog);
+  const catalog = useAppSelector((state) => state.catalog);
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(getProducts()).then(() => dispatch(setActivePage(1)));
-  }, [dispatch]);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
     dispatch(setActivePage(value));
+    dispatch(applyFilter());
   };
 
+  useEffect(() => {
+    dispatch(getCatalog()).then(() => dispatch(applyFilter()));
+  }, [dispatch]);
+
   return (
-    <div>
-      {state.isCatalogLoading ? (
+    <div className={styles.catalogWrapper}>
+      {catalog.isCatalogLoading ? (
         <div>loading</div>
       ) : (
-        state.products.map((el) => <Card product={el} key={el.id} />)
+        <div className={styles.catalogContainer}>
+          <Filter brands={catalog.brands} />
+          <div className={styles.products}>
+            {catalog.products.map((el) => (
+              <Card product={el} key={el.id} />
+            ))}
+          </div>
+        </div>
       )}
-      <Pagination count={state.pageCount} onChange={handlePageChange} />
+      {!catalog.isCatalogLoading && (
+        <Pagination
+          page={catalog.activePage}
+          className={styles.pagination}
+          count={catalog.pageCount}
+          onChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };
