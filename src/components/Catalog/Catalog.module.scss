@@ -3,12 +3,13 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+	padding: 20px;
+	padding-bottom: 0;
   overflow-y: auto;
   .catalogContainer {
     max-width: 1300px;
     display: flex;
     gap: 20px;
-		padding: 20px;
     .products {
       display: flex;
       flex-wrap: wrap;

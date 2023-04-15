@@ -7,6 +7,7 @@ export const Header = () => {
   const handleClick = () => {};
   return (
     <div className={styles.headerContainer}>
+			<Link to={'/'} className={styles.logo}>Shop</Link>
       <Link to={'/shopping-cart'} onClick={handleClick} className={styles.shoppingCart}>
         <img src="/images/shopping-cart-white.png" alt="cart" />
         {!!cart.length && <div className={styles.count}>{cart.length}</div>}
