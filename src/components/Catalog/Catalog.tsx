@@ -5,10 +5,10 @@ import {
 } from '../../redux/catalogReducer';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { useEffect } from 'react';
-import { Card } from '../Card/Card';
+import { ProductCard } from './ProductCard/ProductCard';
 import styles from './Catalog.module.scss';
 import { Pagination } from '@mui/material';
-import { Filter } from '../Filter/Filter';
+import { Filter } from './Filter/Filter';
 
 export const Catalog = () => {
   const catalog = useAppSelector((state) => state.catalog);
@@ -35,7 +35,7 @@ export const Catalog = () => {
           <Filter brands={catalog.brands} />
           <div className={styles.products}>
             {catalog.products.map((el) => (
-              <Card product={el} key={el.id} />
+              <ProductCard product={el} key={el.id} />
             ))}
           </div>
         </div>

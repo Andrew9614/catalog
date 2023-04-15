@@ -5,14 +5,33 @@ import { store } from './redux/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.scss';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { ShoppingCart } from './components/ShoppingCart/ShoppingCart';
+import { Catalog } from './components/Catalog/Catalog';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+    children: [
+      {
+        path: '/shopping-cart',
+        element: <ShoppingCart />,
+      },
+      {
+        path: '/',
+        element: <Catalog />,
+      },
+    ],
+  },
+]);
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>
 );

@@ -1,11 +1,11 @@
 import styles from './Filter.module.scss';
-import { BrandsType } from '../../types/brandsType';
-import { useAppDispatch } from '../../redux/hooks';
+import { BrandsType } from '../../../types/brandsType';
+import { useAppDispatch } from '../../../redux/hooks';
 import {
   applyFilter,
   clearFilter,
   setActiveFilter,
-} from '../../redux/catalogReducer';
+} from '../../../redux/catalogReducer';
 
 type FilterType = {
   brands: BrandsType[];
