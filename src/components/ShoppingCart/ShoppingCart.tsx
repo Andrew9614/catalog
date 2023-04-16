@@ -37,13 +37,17 @@ export const ShoppingCart = () => {
   };
   const handleOrderSubmit = async (values: FormValues) => {
     const res = await dispatch(sendOrders());
-		return res.payload.result === 'ok'
-			? setModalText('Заказ успешно создан')
-			: setModalText('Ошибка, попробуйте еще раз');
+    if (res.payload.result === 'ok') {
+      setModalText('Заказ успешно создан');
+      return true;
+    } else {
+      setModalText('Ошибка, попробуйте еще раз');
+      return false;
+    }
   };
-	
+
   const handleClose = () => {
-    setIsModalForm(false)
+    setIsModalForm(false);
   };
   return (
     <>
@@ -84,7 +88,7 @@ export const ShoppingCart = () => {
                   cart.products[0].product.regular_price.currency}
               </div>
               <button disabled={cart.isOrdersSending} onClick={handleMakeOrder}>
-                Make order
+                Заказать
               </button>
             </div>
           </>

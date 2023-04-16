@@ -12,6 +12,7 @@ type InitialStateType = {
   pageCount: number;
   activePage: number;
   cardPerPage: number;
+  sortByPrice: 'ascending' | 'descending' | 'default';
 };
 
 const initialState: InitialStateType = {
@@ -22,6 +23,7 @@ const initialState: InitialStateType = {
   pageCount: 0,
   cardPerPage: 6,
   activePage: 1,
+  sortByPrice: 'default',
 };
 
 export const catalogSlice = createSlice({
@@ -38,17 +40,36 @@ export const catalogSlice = createSlice({
       state.brands.find((brand) => brand.id === action.payload.id)!.active =
         action.payload.checked;
     },
-    applyFilter: (state) => {
+    setSortByPriceType: (
+      state,
+      action: PayloadAction<{ type: 'ascending' | 'descending' | 'default' }>
+    ) => {
+      state.sortByPrice = action.payload.type;
+    },
+    applyFilters: (state) => {
       const activeFilter = state.brands.filter((el) => el.active);
       if (activeFilter.length) {
         state.products = state.productsFull.filter((product) =>
           activeFilter.find((brand) => brand.id === product.brand)
         );
       } else {
-        state.products = state.productsFull;
+        state.products = [...state.productsFull];
       }
-      state.pageCount = Math.ceil(state.products.length / state.cardPerPage)||1;
-			console.log(state.pageCount);
+      switch (state.sortByPrice) {
+        case 'ascending':
+          state.products.sort(
+            (a, b) => a.regular_price.value - b.regular_price.value
+          );
+          break;
+        case 'descending':
+          state.products.sort(
+            (a, b) => b.regular_price.value - a.regular_price.value
+          );
+          break;
+      }
+
+      state.pageCount =
+        Math.ceil(state.products.length / state.cardPerPage) || 1;
       if (state.pageCount < state.activePage) {
         state.activePage = state.pageCount;
       }
@@ -61,7 +82,8 @@ export const catalogSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getCatalog.fulfilled, (state, action) => {
-        state.productsFull = state.products = [...action.payload[0]];
+        state.productsFull = [...action.payload[0]];
+        state.products = [...action.payload[0]];
         state.pageCount = Math.ceil(
           action.payload[0].length / state.cardPerPage
         );
@@ -77,8 +99,12 @@ export const catalogSlice = createSlice({
   },
 });
 
-export const { setActiveFilter, setActivePage, applyFilter } =
-  catalogSlice.actions;
+export const {
+  setActiveFilter,
+  setActivePage,
+  applyFilters,
+  setSortByPriceType,
+} = catalogSlice.actions;
 
 export const getCatalog = createAsyncThunk<[ProductType[], BrandsType[]], void>(
   'catalog/getProducts',
@@ -102,5 +128,6 @@ export const clearFilter = createAsyncThunk<
   state.catalog.brands.forEach((el) =>
     dispatch(setActiveFilter({ checked: false, id: el.id }))
   );
-  dispatch(applyFilter());
+  dispatch(setSortByPriceType({ type: 'default' }));
+  dispatch(applyFilters());
 });

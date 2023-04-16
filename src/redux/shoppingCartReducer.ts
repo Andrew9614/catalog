@@ -62,7 +62,11 @@ export const sendOrders = createAsyncThunk<
   { dispatch: AppDispatch; state: RootState }
 >('shoppingCart/sendOrders', async (arg, thunkAPI) => {
   const state = thunkAPI.getState();
-  const res = await shoppingCartAPI.postOrders(state.shoppingCart.products);
-  console.log(res.data);
-  return res.data;
+  try {
+    const res = await shoppingCartAPI.postOrders(state.shoppingCart.products);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+		return {response: 'error'}
+  }
 });

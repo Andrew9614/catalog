@@ -4,10 +4,16 @@ import { BrandsType } from '../types/brandsType';
 
 export const catalogAPI = {
   getProducts: async () => {
+    await new Promise((resolve) => {
+      setTimeout(resolve, Math.random()*1000);
+    });
     const products = await axios.get<ProductType[]>('products.json');
     return products.data;
   },
   getBrands: async () => {
+    await new Promise((resolve) => {
+      setTimeout(resolve, Math.random()*1000);
+    });
     const brands = await axios.get<BrandsType[]>('brands.json');
     return brands.data;
   },

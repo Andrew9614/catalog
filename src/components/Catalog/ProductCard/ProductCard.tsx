@@ -17,17 +17,14 @@ export const ProductCard = ({ product }: ProductCardType) => {
     <div className={styles.cardContainer}>
       <div>{product.title}</div>
       <img className={styles.productImage} src={product.image} alt="product" />
-      <div>{product.brand}</div>
-      <div>{product.sku}</div>
-      <div>{product.type}</div>
       <div>
-        {product.regular_price.value + ' ' + product.regular_price.currency}
+        {'Цена: '+product.regular_price.value + ' ' + product.regular_price.currency}
       </div>
       <button
         disabled={!!cart.find((el) => el.product.id === product.id)}
         onClick={handleBuyClick}
       >
-        buy
+        Купить
       </button>
     </div>
   );

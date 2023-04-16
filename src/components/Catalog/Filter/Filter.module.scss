@@ -1,12 +1,29 @@
-.filterContainer{
-	position: sticky;
-	top: 0;
-	width: 300px;
-	height: fit-content;
-	display: flex;
-	flex-direction: column;
-	padding: 10px;
-	border-radius: 10px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+@import '../../../vars.scss';
 
+.filterWrapper {
+	position: sticky !important;
+	top: 0;
+	border-radius: 10px !important;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2) !important;
+	box-sizing: border-box;
+  .filterContainer {
+    display: flex;
+    flex-direction: column;
+		box-sizing: border-box;
+    gap: 20px;
+    width: 300px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    span {
+      color: $accentColor;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+	.filterWrapper{
+		width: 100%;
+		
+	}
 }

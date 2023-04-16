@@ -1,7 +1,7 @@
 import { CircularProgress, TextField } from '@mui/material';
 import { useFormik } from 'formik';
 import styles from './Form.module.scss';
-import { useState } from 'react';
+import { useAppSelector } from '../../../redux/hooks';
 
 type errors = {
   name?: string;
@@ -11,10 +11,10 @@ type errors = {
 export type FormValues = { name: string; phone: string };
 
 type FormType = {
-  handleSubmit: (values: FormValues) => Promise<void>;
+  handleSubmit: (values: FormValues) => Promise<boolean>;
 };
 export const Form = ({ handleSubmit }: FormType) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+	const isSubmitting = useAppSelector((state)=> state.shoppingCart.isOrdersSending)
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -33,9 +33,7 @@ export const Form = ({ handleSubmit }: FormType) => {
       return errors;
     },
     onSubmit: (values) => {
-      setIsSubmitting(true);
-      handleSubmit(values).then(() => {
-        setIsSubmitting(false);
+      handleSubmit(values).then((res) => {
       });
     },
   });
@@ -44,7 +42,7 @@ export const Form = ({ handleSubmit }: FormType) => {
       <TextField
         name={'name'}
         variant="outlined"
-        label={'Name'}
+        label={'Имя'}
         error={Boolean(formik.errors.name) && formik.touched.name}
         helperText={formik.touched.name ? formik.errors.name : ''}
         onChange={formik.handleChange}
@@ -53,7 +51,7 @@ export const Form = ({ handleSubmit }: FormType) => {
       <TextField
         name={'phone'}
         variant="outlined"
-        label={'Phone'}
+        label={'Телефон'}
         error={Boolean(formik.errors.phone) && formik.touched.phone}
         helperText={formik.touched.phone ? formik.errors.phone : ''}
         onChange={formik.handleChange}
