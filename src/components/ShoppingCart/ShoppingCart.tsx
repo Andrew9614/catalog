@@ -9,13 +9,14 @@ import { ProductType } from '../../types/productsType';
 import styles from './ShoppingCart.module.scss';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Form, FormValues } from './Form/Form';
 
 export const ShoppingCart = () => {
   const cart = useAppSelector((state) => state.shoppingCart);
   const dispatch = useAppDispatch();
 
   const [modalText, setModalText] = useState<string | null>(null);
-
+  const [isModalForm, setIsModalForm] = useState(false);
   const calculateSum = () => {
     let sum = 0;
     for (let el of cart.products) {
@@ -32,24 +33,33 @@ export const ShoppingCart = () => {
     dispatch(deleteProduct({ id: id }));
   };
   const handleMakeOrder = () => {
-    dispatch(sendOrders()).then((res) =>
-      res.payload.result === 'ok'
-        ? setModalText('Заказ успешно создан')
-        : setModalText('Ошибка, попробуйте еще раз')
-    );
+    setIsModalForm(true);
   };
+  const handleOrderSubmit = async (values: FormValues) => {
+    const res = await dispatch(sendOrders());
+		return res.payload.result === 'ok'
+			? setModalText('Заказ успешно создан')
+			: setModalText('Ошибка, попробуйте еще раз');
+  };
+	
   const handleClose = () => {
-    setModalText(null);
+    setIsModalForm(false)
   };
   return (
     <>
-      <Modal open={!!modalText} onClose={handleClose}>
+      <Modal open={!!isModalForm} onClose={handleClose}>
         <div className={styles.modalWrapper}>
           <div className={styles.modalContainer}>
-            <div className={styles.message}>{modalText}</div>
-            <Link to={'/'}>
-              <button onClick={handleClose}>Вернуться на главную</button>
-            </Link>
+            {modalText ? (
+              <>
+                <div className={styles.message}>{modalText}</div>
+                <Link to={'/'}>
+                  <button onClick={handleClose}>Вернуться на главную</button>
+                </Link>
+              </>
+            ) : (
+              <Form handleSubmit={handleOrderSubmit} />
+            )}
           </div>
         </div>
       </Modal>
